@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 /* global document:true, window:true */
 
-var eol = require('eol')
-var fs = require('fs')
-var jsdom = require('jsdom').jsdom
-document = jsdom()
-window = document.defaultView
-var clipboardy = require('clipboardy')
-var git = require('git-rev')
-var prompt = require('cli-input')
+const eol = require('eol');
+const fs = require('fs');
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+const dom = new JSDOM();
+global.document = dom.window.document;
+global.window = dom.window;
+const clipboardy = require('clipboardy');
+const git = require('git-rev');
+const prompt = require('cli-input');
 
-var Generator = require('./lib/generator')
-var pkg = require('./package.json')
+const Generator = require('./lib/generator');
+const pkg = require('./package.json');
 
-var help = 'Usage:\n' +
+const help = 'Usage:\n' +
     '\n' +
     '    spotgen input.txt [output.txt]\n' +
     '\n' +
@@ -52,51 +54,50 @@ var help = 'Usage:\n' +
  * @param {output} [output] - Output file.
  * @return {Promise} A promise.
  */
-function generate (str, output) {
+async function generate (str, output) {
   output = output || 'STDOUT'
   output = output.trim()
-  var generator = new Generator(str)
-  return generator.generate().then(function (result) {
-    if (!result) {
-      return
+  const generator = new Generator(str)
+  const result = await generator.generate();
+  if (!result) {
+    return
+  }
+  if (output === 'STDOUT') {
+    console.log('')
+    if (generator.format === 'uri') {
+      console.log(
+        '********************************************************\n' +
+          '* COPY AND PASTE THE BELOW INTO A NEW SPOTIFY PLAYLIST *\n' +
+          '********************************************************\n')
     }
-    if (output === 'STDOUT') {
-      console.log('')
-      if (generator.format === 'uri') {
-        console.log(
-          '********************************************************\n' +
-            '* COPY AND PASTE THE BELOW INTO A NEW SPOTIFY PLAYLIST *\n' +
-            '********************************************************\n')
+    console.log(result + '\n')
+    const ps = prompt({format: 'Copy to clipboard? (Y/n) '})
+    ps.prompt(null, function (err, val) {
+      if (err) {
+        return
       }
-      console.log(result + '\n')
-      var ps = prompt({format: 'Copy to clipboard? (Y/n) '})
-      ps.prompt(null, function (err, val) {
-        if (err) {
-          return
-        }
-        if (val[0].toLowerCase().trim() !== 'n') {
-          clipboardy.writeSync(result + '\n')
-        }
-        ps.close()
-      })
-    } else {
-      result = eol.auto(result)
-      fs.writeFile(output, result, function (err) {
-        if (err) { return }
-        console.log('Wrote to ' + output)
-      })
-    }
-  })
+      if (val[0].toLowerCase().trim() !== 'n') {
+        clipboardy.writeSync(result + '\n')
+      }
+      ps.close()
+    })
+  } else {
+    result = eol.auto(result)
+    fs.writeFile(output, result, function (err) {
+      if (err) { return }
+      console.log('Wrote to ' + output)
+    })
+  }
 }
 
 /**
  * Main method.
  * Invoked when run from the command line.
  */
-function main () {
-  var input = process.argv[2]
-  var output = process.argv[3]
-  var str = input
+async function main () {
+  const input = process.argv[2]
+  const output = process.argv[3]
+  let str = input
   if (typeof input === 'string' &&
       input.match(/(^-*h(elp)?$)|(^\/\?$)/gi)) {
     console.log(help)
@@ -111,7 +112,7 @@ function main () {
   }
   if (!input) {
     console.log('Enter generator string (submit with Ctrl-D):')
-    var ps = prompt()
+    const ps = prompt()
     ps.multiline(function (err, lines, str) {
       ps.close()
       if (err) {
@@ -127,12 +128,12 @@ function main () {
       // is input a file name?
       str = fs.readFileSync(input, 'utf8').toString()
       str = eol.lf(str)
-      generate(str, output)
+      await generate(str, output)
     } catch (err) {
       // input is generator string; help out primitive shells
       // (e.g., Windows') with newlines
       str = str.replace(/\\n/gi, '\n')
-      generate(str, output)
+      await generate(str, output)
     }
   }
 }
@@ -142,3 +143,4 @@ if (require.main === module) {
 }
 
 module.exports = Generator
+

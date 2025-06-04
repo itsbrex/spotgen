@@ -1,16 +1,19 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
+// Importing necessary modules and functions
 import { cancel, confirm, intro, isCancel, outro, text } from '@clack/prompts';
 import { execSync } from 'child_process';
 import * as eol from 'eol';
 import * as fs from 'fs';
 import * as git from 'git-rev';
 import { JSDOM } from 'jsdom';
-import Generator from './lib/generator';
-import { version as pkgVersion } from './package.json';
+import Generator from '../lib/generator';
+const pkgVersion = require('../package.json').version;
 
+// Creating a new JSDOM instance
 const document = new JSDOM().window.document;
 
+// Help text for the application
 const help = `Usage:
     spotgen input.txt [output.txt]
 
@@ -21,9 +24,10 @@ which can be imported into Spotify. If an output file is not
 specified, then the Spotify URIs are written to standard output,
 with an option to copy them to the clipboard.`;
 
-async function generate(str: string, output?: string) {
+// Function to generate Spotify URIs
+const generate = async (str: string, output?: string) => {
   output = output?.trim() || 'STDOUT';
-  const generator = new Generator(str);;
+  const generator = new Generator(str);
   const result = await generator.generate();
   if (!result) return;
 
@@ -39,18 +43,13 @@ async function generate(str: string, output?: string) {
     }
   } else {
     const resultWithEOL = eol.auto(result);
-    fs.writeFile(output, resultWithEOL, (err) => {
-      if (err) return;
-      text({ message: 'Wrote to ' + output });
-    });
+    await fs.promises.writeFile(output, resultWithEOL);
+    text({ message: 'Wrote to ' + output });
   }
 }
 
-async function main() {
-  intro('Welcome to Spotify Playlist Generator');
-  const input = process.argv[2];
-  const output = process.argv[3];
-
+// Function to handle command-line arguments
+const handleArgs = async (input: string, output: string) => {
   if (/^-*h(elp)?$|^\/\?$/i.test(input)) {
     intro(help);
     return;
@@ -79,11 +78,21 @@ async function main() {
       await generate(str, output);
     }
   }
+}
+
+// Main function to handle the application logic
+const main = async () => {
+  intro('Welcome to Spotify Playlist Generator');
+  const input = process.argv[2];
+  const output = process.argv[3];
+  await handleArgs(input, output);
   outro('Thank you for using Spotify Playlist Generator');
 }
 
-if (require.main === module) {
+// Check if the script is being run directly
+if (require.main === require('path').resolve(__dirname)) {
   main();
 }
 
+// Exporting the Generator class
 export { Generator };

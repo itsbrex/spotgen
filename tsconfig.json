@@ -1,14 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "explainFiles": true,
-    "listFiles": true,
-    "checkJs": true,
-    "declaration": true,
-    "outDir": "./types",
-    "strict": true,
-    "esModuleInterop": true
-  },
-  "include": ["./lib/**/*.js"]
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"explainFiles": true,
+		"listFiles": true,
+		"checkJs": true,
+		"declaration": true,
+		"outDir": "./types",
+		"strict": true,
+		"esModuleInterop": true
+	},
+	"include": ["./lib/**/*.js"]
 }

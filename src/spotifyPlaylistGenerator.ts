@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
-import { execSync } from "child_process";
 import * as fs from "fs";
+import { execSync } from "node:child_process";
 // Importing necessary modules and functions
 import { cancel, confirm, intro, isCancel, outro, text } from "@clack/prompts";
 import * as eol from "eol";
@@ -26,12 +26,12 @@ with an option to copy them to the clipboard.`;
 
 // Function to generate Spotify URIs
 const generate = async (str: string, output?: string) => {
-	output = output?.trim() || "STDOUT";
+	const outputFile = output?.trim() || "STDOUT";
 	const generator = new Generator(str);
 	const result = await generator.generate();
 	if (!result) return;
 
-	if (output === "STDOUT") {
+	if (outputFile === "STDOUT") {
 		await text({
 			message: `********************************************************
 * COPY AND PASTE THE BELOW INTO A NEW SPOTIFY PLAYLIST *
@@ -39,12 +39,12 @@ const generate = async (str: string, output?: string) => {
 		});
 		const shouldCopy = await confirm({ message: "Copy to clipboard?" });
 		if (shouldCopy) {
-			execSync(`echo "${result + "\n"}" | pbcopy`);
+			execSync(`echo "${`${result}\n`}" | pbcopy`);
 		}
 	} else {
 		const resultWithEOL = eol.auto(result);
-		await fs.promises.writeFile(output, resultWithEOL);
-		text({ message: "Wrote to " + output });
+		await fs.promises.writeFile(outputFile, resultWithEOL);
+		text({ message: `Wrote to ${outputFile}` });
 	}
 };
 
@@ -53,9 +53,10 @@ const handleArgs = async (input: string, output: string) => {
 	if (/^-*h(elp)?$|^\/\?$/i.test(input)) {
 		intro(help);
 		return;
-	} else if (/^-*v(ersion)?$|^\/\?$/i.test(input)) {
+	}
+	if (/^-*v(ersion)?$|^\/\?$/i.test(input)) {
 		git.short((sha) => {
-			intro(pkgVersion + (sha ? "+" + sha : ""));
+			intro(pkgVersion + (sha ? `+${sha}` : ""));
 		});
 		return;
 	}
@@ -92,7 +93,7 @@ const main = async () => {
 };
 
 // Check if the script is being run directly
-if (require.main === require("path").resolve(__dirname)) {
+if (require.main === require("node:path").resolve(__dirname)) {
 	main();
 }
 

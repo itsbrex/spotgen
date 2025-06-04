@@ -1,0 +1,56 @@
+---
+description: Git-related rules and best practices for version control
+globs: 
+alwaysApply: false
+---
+# Git Rules and Best Practices
+
+## Commit Message Standards
+- Use gitmoji conventional commits format: `<emoji> <type>(<scope>): <description>`
+- Types include: feat, fix, docs, style, refactor, test, chore
+- Keep the first line under 72 characters
+- Use the imperative mood ("Add feature" not "Added feature")
+- Reference issue numbers when applicable
+
+### Emoji Reference
+- 🎉 Initial commit or major new feature
+- ✨ New feature
+- 🐛 Bug fix
+- 📝 Documentation update
+- 🔧 Configuration changes
+- 🚀 Performance improvements
+- 💄 Style/UI updates
+- ♻️ Refactoring code
+- ✅ Adding or updating tests
+- 🔒 Security fixes
+- ⬆️ Upgrading dependencies
+- ⬇️ Downgrading dependencies
+- 🚨 Fixing linter warnings
+- 🔀 Merging branches
+
+## Branch Naming Conventions
+- Feature branches: `feature/<feature-name>`
+- Bug fix branches: `fix/<bug-description>`
+- Release branches: `release/<version>`
+- Hotfix branches: `hotfix/<issue-description>`
+- Use kebab-case for branch names
+
+## Git Workflow
+- Always pull before starting new work
+- Create feature branches from main/master
+- Regularly commit small, logical changes
+- Push branches regularly for backup
+- Create pull requests for code review
+- Squash commits when merging to main/master
+
+## Git Hooks
+- Use pre-commit hooks for linting and formatting (biome, ruff)
+- Use commit-msg hooks to enforce commit message standards (commitlint)
+- Use pre-push hooks for running tests
+
+## Git Configuration
+- Use `.gitignore` to exclude build artifacts, dependencies, and sensitive files
+- Configure `.gitattributes` for proper line endings and binary file handling
+- Use signed commits when possible
+
+## Example Commands

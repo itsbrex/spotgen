@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /* global document:true, window:true */
 
 const eol = require('eol');
@@ -58,7 +58,7 @@ async function generate (str, output) {
   output = output || 'STDOUT'
   output = output.trim()
   const generator = new Generator(str)
-  const result = await generator.generate();
+  let result = await generator.generate();
   if (!result) {
     return
   }

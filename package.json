@@ -27,7 +27,6 @@
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.11.0",
-		"base-64": "^1.0.0",
 		"bootstrap": "^5.3.6",
 		"bun-types": "^1.2.15",
 		"cli-input": "^0.2.0",

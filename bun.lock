@@ -25,7 +25,6 @@
         "spotgen": ".",
         "string-similarity": "^4.0.4",
         "urijs": "^1.19.11",
-        "xregexp": "^5.1.2",
       },
       "devDependencies": {
         "@types/git-rev": "^0.2.2",

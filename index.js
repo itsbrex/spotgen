@@ -78,7 +78,7 @@ async function generate(str, output) {
 				return;
 			}
 			if (val[0].toLowerCase().trim() !== "n") {
-				clipboardy.writeSync(`${result}\n`);
+				clipboardy.write(`${result}\n`);
 			}
 			ps.close();
 		});

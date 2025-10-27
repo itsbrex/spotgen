@@ -4,7 +4,11 @@
 	"author": "Vegard Øye <vegard_oye@hotmail.com>",
 	"description": "A tool for generating Spotify playlists programmatically. Convert websites to Spotify playlists, incorporate Last.fm listener data, and employ smart algorithms to reorder the tracks.",
 	"license": "MIT",
-	"keywords": ["spotify", "playlist", "generator"],
+	"keywords": [
+		"spotify",
+		"playlist",
+		"generator"
+	],
 	"main": "index.js",
 	"type": "commonjs",
 	"bin": {
@@ -36,14 +40,13 @@
 		"jquery": "^3.7.1",
 		"jsdom": "^26.1.0",
 		"lodash": "^4.17.21",
-		"opn": "^6.0.0",
+		"open": "^10.2.0",
 		"preq": "^0.5.14",
 		"promise": "^8.3.0",
 		"request": "^2.88.2",
 		"spotgen": ".",
 		"string-similarity": "^4.0.4",
-		"urijs": "^1.19.11",
-		"xregexp": "^5.1.2"
+		"urijs": "^1.19.11"
 	},
 	"devDependencies": {
 		"@types/git-rev": "^0.2.2",
@@ -88,7 +91,7 @@
 		"server": "bunx http-server -p 9000 dist",
 		"start": "open http://localhost:9000/",
 		"http": "bun run start && bun run server",
-		"browser": "browserify dist/web.js -i express -i preq -i xregexp -o dist/bundle.js && browserify test/test.js -i express -i preq -i xregexp -o test/bundle.js",
+		"browser": "browserify dist/web.js -i express -i preq -o dist/bundle.js && browserify test/test.js -i express -i preq -o test/bundle.js",
 		"minify": "uglifyjs dist/bundle.js -o dist/bundle.js",
 		"open": "open dist/index.html",
 		"web": "bun run browser && bun run open",

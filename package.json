@@ -39,10 +39,9 @@
 		"jquery": "^3.7.1",
 		"jsdom": "^26.1.0",
 		"lodash": "^4.17.21",
+		"node-fetch": "^2.7.0",
 		"open": "^10.2.0",
-		"preq": "^0.5.14",
 		"promise": "^8.3.0",
-		"request": "^2.88.2",
 		"spotgen": ".",
 		"string-similarity": "^4.0.4",
 		"urijs": "^1.19.11"
